@@ -11,7 +11,7 @@ También permite preparar una reserva desde el navegador y transferirla a WhatsA
 
 <!-- COMPLETAR: explicar la motivación original del proyecto; no se puede inferir con certeza a partir del código. -->
 
-Este sitio se desarrollo como parte de las práctica de las practicas hechas en  el día 2 en la sesión de Agentes que construyen del Bootcamp Vibe Agents.
+Este sitio se desarrollo como parte de las práctica de las practicas hechas en el día 2 en la sesión de Agentes que construyen del Bootcamp Vibe Agents.
 
 ## Demo
 
@@ -19,7 +19,7 @@ Este sitio se desarrollo como parte de las práctica de las practicas hechas en 
 
 La vista previa disponible en el repositorio es [una fotografía del local](assets/local-hero.jpeg).
 
-Link de muesta del sitio: https://don-cuco-talent-team1.vercel.app/
+Link de muestra del sitio: [don-cuco-talent-team1.vercel.app](https://don-cuco-talent-team1.vercel.app/)
 
 ## Stack técnico
 
