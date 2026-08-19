@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Don Cuco — Asador de Pollos | Los Mochis, Sinaloa</title>
+<meta name="description" content="Pollo asado al carbón y fast food para llevar en Los Mochis, Sinaloa. Desde 1990. Pide por WhatsApp o reserva tu pedido en línea.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700;900&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --terracota:#c1502e;
+    --terracota-dark:#9c3d21;
+    --oliva:#6b7b4f;
+    --cafe:#4a3327;
+    --crema:#faf3e6;
+    --crema-2:#f2e6d0;
+    --dorado:#c9974d;
+    --carbon:#241d17;
+    --texto:#2b241b;
+    --blanco:#fffdf8;
+    --sombra: 0 10px 30px rgba(36,29,23,.15);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'Nunito Sans', sans-serif;
+    color:var(--texto);
+    background:var(--crema);
+    overflow-x:hidden;
+  }
+  h1,h2,h3,h4{font-family:'Fraunces', serif; line-height:1.15;}
+  a{text-decoration:none; color:inherit;}
+  img{max-width:100%; display:block;}
+  .container{max-width:1140px; margin:0 auto; padding:0 24px;}
+  .btn{
+    display:inline-flex; align-items:center; gap:10px;
+    padding:14px 28px; border-radius:999px; font-weight:800;
+    font-size:.95rem; letter-spacing:.02em; cursor:pointer;
+    border:2px solid transparent; transition:transform .25s ease, box-shadow .25s ease, background .25s ease;
+    white-space:nowrap;
+  }
+  .btn:hover{transform:translateY(-3px) scale(1.02); box-shadow:var(--sombra);}
+  .btn-primary{background:var(--terracota); color:var(--blanco);}
+  .btn-primary:hover{background:var(--terracota-dark);}
+  .btn-whatsapp{background:#25D366; color:#08331b;}
+  .btn-outline{background:transparent; border-color:var(--crema); color:var(--crema);}
+  .btn-outline.dark{border-color:var(--cafe); color:var(--cafe);}
+  .btn-dorado{background:var(--dorado); color:var(--carbon);}
+
+  /* Header */
+  header{
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    background:rgba(250,243,230,.92); backdrop-filter:blur(8px);
+    border-bottom:1px solid rgba(74,51,39,.08);
+    transition:box-shadow .3s ease;
+  }
+  header.scrolled{box-shadow:0 4px 20px rgba(36,29,23,.08);}
+  .nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 24px; max-width:1140px; margin:0 auto;
+  }
+  .logo{display:flex; align-items:center; gap:10px;}
+  .logo-mark{width:42px; height:42px;}
+  .logo-text{font-family:'Fraunces', serif; font-weight:800; font-size:1.35rem; color:var(--terracota-dark); letter-spacing:.01em;}
+  .logo-text span{display:block; font-family:'Nunito Sans',sans-serif; font-weight:700; font-size:.55rem; letter-spacing:.25em; color:var(--oliva); text-transform:uppercase;}
+  .nav ul{list-style:none; display:flex; gap:28px;}
+  .nav ul li a{font-weight:700; font-size:.9rem; color:var(--cafe); position:relative; padding:4px 0;}
+  .nav ul li a::after{
+    content:''; position:absolute; left:0; bottom:0; height:2px; width:0;
+    background:var(--terracota); transition:width .3s ease;
+  }
+  .nav ul li a:hover::after{width:100%;}
+  .nav-cta{display:flex; gap:10px;}
+  .nav-cta .btn{padding:10px 18px; font-size:.8rem;}
+  .burger{display:none; flex-direction:column; gap:5px; cursor:pointer; background:none; border:none;}
+  .burger span{width:26px; height:3px; background:var(--cafe); border-radius:2px;}
+
+  /* Hero */
+  .hero{
+    position:relative; min-height:100vh; display:flex; align-items:center;
+    padding:120px 0 60px; overflow:hidden;
+    background:linear-gradient(160deg, var(--carbon) 0%, var(--cafe) 55%, var(--terracota-dark) 130%);
+  }
+  .hero::before{
+    content:''; position:absolute; inset:0;
+    background:
+      radial-gradient(circle at 80% 20%, rgba(201,151,77,.25), transparent 45%),
+      radial-gradient(circle at 10% 80%, rgba(107,123,79,.2), transparent 40%);
+    pointer-events:none;
+  }
+  .hero-grid{
+    display:grid; grid-template-columns:1.05fr .95fr; gap:50px; align-items:center;
+    position:relative; z-index:2;
+  }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    color:var(--dorado); font-weight:800; letter-spacing:.18em; font-size:.75rem;
+    text-transform:uppercase; margin-bottom:18px;
+    opacity:0; animation:fadeUp .8s ease forwards .1s;
+  }
+  .eyebrow::before{content:''; width:26px; height:2px; background:var(--dorado); display:inline-block;}
+  .hero h1{
+    font-size:clamp(2.6rem, 5.5vw, 4.2rem); color:var(--blanco); font-weight:900;
+    margin-bottom:20px; opacity:0; animation:fadeUp .9s ease forwards .25s;
+  }
+  .hero h1 em{font-style:normal; color:var(--dorado);}
+  .hero p.lead{
+    color:var(--crema-2); font-size:1.15rem; max-width:520px; margin-bottom:34px; line-height:1.6;
+    opacity:0; animation:fadeUp .9s ease forwards .4s;
+  }
+  .hero-actions{display:flex; flex-wrap:wrap; gap:16px; opacity:0; animation:fadeUp .9s ease forwards .55s;}
+  .hero-meta{
+    display:flex; gap:28px; margin-top:44px; flex-wrap:wrap;
+    opacity:0; animation:fadeUp .9s ease forwards .7s;
+  }
+  .hero-meta div{color:var(--crema-2);}
+  .hero-meta strong{display:block; color:var(--dorado); font-family:'Fraunces',serif; font-size:1.5rem;}
+  .hero-meta span{font-size:.8rem; letter-spacing:.05em; text-transform:uppercase; opacity:.8;}
+
+  .hero-photo{
+    position:relative; opacity:0; animation:fadeIn 1.1s ease forwards .3s;
+  }
+  .hero-photo .frame{
+    border-radius:24px; overflow:hidden; box-shadow:0 30px 60px rgba(0,0,0,.45);
+    transform:rotate(2deg); border:6px solid var(--crema);
+    animation:floaty 6s ease-in-out infinite;
+  }
+  .hero-photo img{width:100%; height:520px; object-fit:cover;}
+  .hero-badge{
+    position:absolute; bottom:-22px; left:-22px; background:var(--dorado); color:var(--carbon);
+    padding:16px 20px; border-radius:16px; box-shadow:var(--sombra); text-align:center;
+    font-family:'Fraunces',serif; font-weight:800; line-height:1.1;
+    animation:floaty 5s ease-in-out infinite reverse;
+  }
+  .hero-badge small{display:block; font-family:'Nunito Sans',sans-serif; font-weight:700; font-size:.65rem; letter-spacing:.1em; text-transform:uppercase; margin-top:4px;}
+
+  @keyframes fadeUp{ from{opacity:0; transform:translateY(24px);} to{opacity:1; transform:translateY(0);} }
+  @keyframes fadeIn{ from{opacity:0; transform:scale(.96);} to{opacity:1; transform:scale(1);} }
+  @keyframes floaty{ 0%,100%{transform:translateY(0) rotate(2deg);} 50%{transform:translateY(-12px) rotate(1deg);} }
+
+  .scroll-cue{
+    position:absolute; bottom:26px; left:50%; transform:translateX(-50%);
+    color:var(--crema-2); display:flex; flex-direction:column; align-items:center; gap:6px;
+    font-size:.7rem; letter-spacing:.15em; text-transform:uppercase; z-index:2;
+  }
+  .scroll-cue .dot{width:6px; height:6px; border-radius:50%; background:var(--dorado); animation:bounce 1.6s infinite;}
+  @keyframes bounce{ 0%,100%{transform:translateY(0);} 50%{transform:translateY(10px);} }
+
+  /* Reveal on scroll */
+  .reveal{opacity:0; transform:translateY(36px); transition:opacity .8s ease, transform .8s ease;}
+  .reveal.in{opacity:1; transform:translateY(0);}
+  .reveal-stagger > * {opacity:0; transform:translateY(30px); transition:opacity .7s ease, transform .7s ease;}
+  .reveal-stagger.in > *{opacity:1; transform:translateY(0);}
+  .reveal-stagger.in > *:nth-child(1){transition-delay:.05s;}
+  .reveal-stagger.in > *:nth-child(2){transition-delay:.15s;}
+  .reveal-stagger.in > *:nth-child(3){transition-delay:.25s;}
+  .reveal-stagger.in > *:nth-child(4){transition-delay:.35s;}
+  .reveal-stagger.in > *:nth-child(5){transition-delay:.45s;}
+  .reveal-stagger.in > *:nth-child(6){transition-delay:.55s;}
+  .reveal-stagger.in > *:nth-child(7){transition-delay:.65s;}
+
+  section{padding:110px 0;}
+  .section-head{max-width:640px; margin-bottom:56px;}
+  .section-head .eyebrow{color:var(--terracota); opacity:1; animation:none;}
+  .section-head .eyebrow::before{background:var(--terracota);}
+  .section-head h2{font-size:clamp(2rem,4vw,2.8rem); color:var(--cafe);}
+  .section-head p{margin-top:14px; font-size:1.05rem; color:#5a4d3f; line-height:1.7;}
+
+  /* Historia */
+  .historia{background:var(--blanco);}
+  .historia-grid{display:grid; grid-template-columns:.85fr 1.15fr; gap:60px; align-items:center;}
+  .historia-img{position:relative;}
+  .historia-img img{border-radius:20px; box-shadow:var(--sombra); height:460px; object-fit:cover; width:100%;}
+  .historia-img .stamp{
+    position:absolute; top:-18px; right:-18px; width:110px; height:110px; border-radius:50%;
+    background:var(--terracota); color:var(--crema); display:flex; align-items:center; justify-content:center;
+    text-align:center; font-family:'Fraunces',serif; font-weight:800; font-size:.85rem; line-height:1.2;
+    box-shadow:var(--sombra); transform:rotate(-8deg);
+    animation:spin-slow 18s linear infinite;
+  }
+  @keyframes spin-slow{ from{transform:rotate(-8deg);} to{transform:rotate(352deg);} }
+  .historia-text p{margin-bottom:18px; line-height:1.8; color:#4a3f33; font-size:1.02rem;}
+  .historia-text strong{color:var(--terracota-dark);}
+  .badges-row{display:flex; gap:14px; margin-top:28px; flex-wrap:wrap;}
+  .badge-chip{
+    background:var(--crema-2); border:1px solid rgba(74,51,39,.12); border-radius:999px;
+    padding:10px 18px; font-size:.85rem; font-weight:700; color:var(--cafe);
+    display:flex; align-items:center; gap:8px; transition:transform .25s ease, background .25s ease;
+  }
+  .badge-chip:hover{transform:translateY(-3px); background:var(--dorado); color:var(--carbon);}
+
+  /* Menu */
+  .menu{background:var(--crema-2);}
+  .menu-toolbar{display:flex; justify-content:space-between; align-items:flex-end; gap:20px; flex-wrap:wrap; margin-bottom:10px;}
+  .menu-grid{
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(240px,1fr)); gap:24px; margin-top:20px;
+  }
+  .menu-card{
+    background:var(--blanco); border-radius:18px; padding:26px; box-shadow:0 6px 18px rgba(74,51,39,.08);
+    transition:transform .3s ease, box-shadow .3s ease; position:relative; overflow:hidden;
+    border:1px solid rgba(74,51,39,.06);
+  }
+  .menu-card::before{
+    content:''; position:absolute; top:0; left:0; width:5px; height:100%;
+    background:var(--terracota); transform:scaleY(0); transform-origin:bottom; transition:transform .3s ease;
+  }
+  .menu-card:hover{transform:translateY(-8px); box-shadow:0 20px 34px rgba(74,51,39,.18);}
+  .menu-card:hover::before{transform:scaleY(1);}
+  .menu-card .top{display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:10px;}
+  .menu-card h3{font-size:1.2rem; color:var(--cafe);}
+  .price{
+    font-family:'Fraunces',serif; font-weight:800; color:var(--terracota-dark); font-size:1.3rem; white-space:nowrap;
+  }
+  .menu-card p{color:#6b5d4d; font-size:.92rem; line-height:1.5;}
+  .menu-card .tag{
+    display:inline-block; margin-top:14px; font-size:.7rem; font-weight:800; letter-spacing:.08em;
+    text-transform:uppercase; color:var(--oliva); background:rgba(107,123,79,.12);
+    padding:4px 10px; border-radius:999px;
+  }
+  .pdf-cta{
+    margin-top:44px; background:var(--carbon); border-radius:20px; padding:36px 40px;
+    display:flex; justify-content:space-between; align-items:center; gap:20px; flex-wrap:wrap;
+    color:var(--crema);
+  }
+  .pdf-cta h3{color:var(--blanco); font-size:1.35rem; margin-bottom:6px;}
+  .pdf-cta p{color:var(--crema-2); font-size:.92rem;}
+
+  /* Reserva */
+  .reserva{background:var(--blanco);}
+  .reserva-grid{display:grid; grid-template-columns:.9fr 1.1fr; gap:60px;}
+  .reserva-info h3{color:var(--cafe); font-size:1.4rem; margin-bottom:14px;}
+  .reserva-info p{color:#5a4d3f; line-height:1.75; margin-bottom:22px;}
+  .steps{list-style:none; display:flex; flex-direction:column; gap:16px;}
+  .steps li{display:flex; gap:14px; align-items:flex-start;}
+  .step-num{
+    flex:none; width:34px; height:34px; border-radius:50%; background:var(--terracota); color:var(--blanco);
+    display:flex; align-items:center; justify-content:center; font-weight:800; font-family:'Fraunces',serif;
+  }
+  .steps span{color:#4a3f33; padding-top:5px; font-size:.95rem;}
+
+  form{
+    background:var(--crema-2); border-radius:22px; padding:34px; box-shadow:0 8px 26px rgba(74,51,39,.08);
+    display:grid; grid-template-columns:1fr 1fr; gap:18px;
+  }
+  form .full{grid-column:1 / -1;}
+  .field label{display:block; font-weight:800; font-size:.8rem; letter-spacing:.03em; color:var(--cafe); margin-bottom:7px;}
+  .field input, .field select, .field textarea{
+    width:100%; padding:13px 14px; border-radius:12px; border:1.5px solid rgba(74,51,39,.18);
+    background:var(--blanco); font-family:inherit; font-size:.95rem; color:var(--texto);
+    transition:border-color .2s ease, box-shadow .2s ease;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus{
+    outline:none; border-color:var(--terracota); box-shadow:0 0 0 4px rgba(193,80,46,.12);
+  }
+  .field textarea{resize:vertical; min-height:90px;}
+  .qty-row{display:flex; gap:10px;}
+  .qty-row select{flex:2;} .qty-row input{flex:1;}
+  form .submit-row{display:flex; align-items:center; gap:16px; flex-wrap:wrap;}
+  .form-note{font-size:.78rem; color:#7a6b58; line-height:1.5;}
+  #formStatus{font-size:.85rem; font-weight:700; padding:10px 14px; border-radius:10px; display:none;}
+  #formStatus.show{display:block;}
+  #formStatus.ok{background:rgba(107,123,79,.15); color:var(--oliva);}
+
+  /* Ubicacion */
+  .ubicacion{background:var(--crema-2);}
+  .ubicacion-grid{display:grid; grid-template-columns:1fr 1fr; gap:40px; align-items:stretch;}
+  .info-card{
+    background:var(--blanco); border-radius:20px; padding:36px; box-shadow:0 6px 18px rgba(74,51,39,.08);
+  }
+  .info-card h3{color:var(--cafe); font-size:1.3rem; margin-bottom:18px; display:flex; align-items:center; gap:10px;}
+  .info-row{display:flex; gap:14px; margin-bottom:18px; align-items:flex-start;}
+  .info-row .ic{
+    flex:none; width:38px; height:38px; border-radius:10px; background:rgba(193,80,46,.1);
+    display:flex; align-items:center; justify-content:center; color:var(--terracota); font-size:1.1rem;
+  }
+  .info-row div strong{display:block; color:var(--cafe); font-size:.95rem;}
+  .info-row div span{color:#6b5d4d; font-size:.9rem;}
+  .hours-table{width:100%; border-collapse:collapse; margin-top:6px;}
+  .hours-table td{padding:7px 0; font-size:.92rem; color:#4a3f33; border-bottom:1px dashed rgba(74,51,39,.12);}
+  .hours-table td:last-child{text-align:right; font-weight:700; color:var(--terracota-dark);}
+  .map-embed{border-radius:20px; overflow:hidden; box-shadow:0 6px 18px rgba(74,51,39,.08); min-height:340px;}
+  .map-embed iframe{width:100%; height:100%; min-height:340px; border:0; display:block;}
+
+  /* Contacto rapido */
+  .contacto{
+    background:linear-gradient(160deg, var(--carbon), var(--terracota-dark));
+    color:var(--crema); text-align:center;
+  }
+  .contacto h2{color:var(--blanco); font-size:clamp(1.8rem,4vw,2.6rem); margin-bottom:14px;}
+  .contacto p{color:var(--crema-2); max-width:560px; margin:0 auto 36px; line-height:1.7;}
+  .wa-buttons{display:flex; justify-content:center; gap:20px; flex-wrap:wrap;}
+  .wa-card{
+    background:rgba(255,253,248,.06); border:1px solid rgba(255,253,248,.18); border-radius:18px;
+    padding:26px 30px; min-width:220px; transition:transform .3s ease, background .3s ease;
+  }
+  .wa-card:hover{transform:translateY(-6px); background:rgba(255,253,248,.12);}
+  .wa-card strong{display:block; font-family:'Fraunces',serif; font-size:1.15rem; color:var(--dorado); margin-bottom:4px;}
+  .wa-card span{font-size:.82rem; color:var(--crema-2); display:block; margin-bottom:14px;}
+
+  /* Testimonios */
+  .testimonios{background:var(--blanco); text-align:center;}
+  .testi-box{
+    max-width:640px; margin:0 auto; border:2px dashed rgba(74,51,39,.2); border-radius:20px;
+    padding:50px 36px; color:#7a6b58;
+  }
+  .testi-box .icon{font-size:2.2rem; margin-bottom:14px;}
+  .testi-box h3{color:var(--cafe); font-size:1.25rem; margin-bottom:10px;}
+
+  footer{background:var(--carbon); color:var(--crema-2); padding:50px 0 24px;}
+  .footer-grid{display:flex; justify-content:space-between; flex-wrap:wrap; gap:30px; margin-bottom:34px;}
+  .footer-logo{display:flex; align-items:center; gap:10px; margin-bottom:12px;}
+  .footer-logo .logo-text{color:var(--dorado);}
+  .footer-col h4{color:var(--blanco); font-size:.85rem; letter-spacing:.08em; text-transform:uppercase; margin-bottom:14px;}
+  .footer-col a, .footer-col p{display:block; color:var(--crema-2); font-size:.88rem; margin-bottom:8px; opacity:.85;}
+  .footer-col a:hover{opacity:1; color:var(--dorado);}
+  .footer-bottom{border-top:1px solid rgba(255,253,248,.1); padding-top:20px; font-size:.78rem; color:rgba(250,243,230,.55); text-align:center;}
+
+  .wa-float{
+    position:fixed; bottom:26px; right:26px; z-index:90;
+    background:#25D366; color:#08331b; width:60px; height:60px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center; box-shadow:0 10px 24px rgba(0,0,0,.25);
+    font-size:1.6rem; animation:pulse 2.4s infinite;
+  }
+  @keyframes pulse{ 0%{box-shadow:0 0 0 0 rgba(37,211,102,.5);} 70%{box-shadow:0 0 0 16px rgba(37,211,102,0);} 100%{box-shadow:0 0 0 0 rgba(37,211,102,0);} }
+
+  @media (max-width: 880px){
+    .nav ul{display:none;}
+    .burger{display:flex;}
+    .hero-grid, .historia-grid, .reserva-grid, .ubicacion-grid{grid-template-columns:1fr;}
+    .hero{padding-top:110px;}
+    .hero-photo{order:-1;}
+    .hero-photo img{height:320px;}
+    form{grid-template-columns:1fr;}
+    .pdf-cta{flex-direction:column; text-align:center;}
+  }
+</style>
+</head>
+<body>
+
+<header id="siteHeader">
+  <div class="nav">
+    <a href="#inicio" class="logo">
+      <svg class="logo-mark" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="48" fill="#c9974d"/>
+        <circle cx="50" cy="50" r="48" stroke="#4a3327" stroke-width="3"/>
+        <path d="M50 24c-4 0-7 3-7 7 0 2 1 4 2 5-6 2-10 8-10 15 0 2 0 4 1 6-3 1-5 4-5 7 0 5 4 9 9 9h20c5 0 9-4 9-9 0-3-2-6-5-7 1-2 1-4 1-6 0-7-4-13-10-15 1-1 2-3 2-5 0-4-3-7-7-7z" fill="#241d17"/>
+        <circle cx="46" cy="34" r="1.6" fill="#c9974d"/>
+        <path d="M60 40l7-3-5 6z" fill="#c1502e"/>
+      </svg>
+      <span class="logo-text">Don Cuco<span>Asador de Pollos</span></span>
+    </a>
+    <ul>
+      <li><a href="#historia">Historia</a></li>
+      <li><a href="#menu">Menú</a></li>
+      <li><a href="#reserva">Reservar</a></li>
+      <li><a href="#ubicacion">Ubicación</a></li>
+    </ul>
+    <div class="nav-cta">
+      <a class="btn btn-primary" href="#reserva">Reservar pedido</a>
+    </div>
+    <button class="burger" id="burgerBtn" aria-label="Abrir menú"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<section class="hero" id="inicio">
+  <div class="container hero-grid">
+    <div>
+      <div class="eyebrow">Los Mochis, Sinaloa · Desde 1990</div>
+      <h1>Pollo al carbón con <em>sazón de casa</em>, listo para llevar</h1>
+      <p class="lead">En Don Cuco asamos cada pollo con especias de la zona y salsas caseras, la misma receta que empezó en una cochera en 1990. Pida por WhatsApp o reserve su pedido en línea — solo para llevar.</p>
+      <div class="hero-actions">
+        <a class="btn btn-whatsapp" href="https://wa.me/523339844093?text=Hola%2C%20quiero%20hacer%20un%20pedido%20en%20Don%20Cuco" target="_blank" rel="noopener">
+          Pedir por WhatsApp
+        </a>
+        <a class="btn btn-outline" href="#menu">Ver el menú</a>
+      </div>
+      <div class="hero-meta">
+        <div><strong>1990</strong><span>Desde que abrimos</span></div>
+        <div><strong>100%</strong><span>Para llevar</span></div>
+        <div><strong>8am–10pm</strong><span>Todos los días</span></div>
+      </div>
+    </div>
+    <div class="hero-photo">
+      <div class="frame">
+        <img src="assets/pollo-asado.jpeg" alt="Pollo asado al carbón de Don Cuco sobre tabla de madera con tortillas y salsas">
+      </div>
+      <div class="hero-badge">Sazón<br>desde 1990<small>Los Mochis</small></div>
+    </div>
+  </div>
+  <div class="scroll-cue"><span>Descubre más</span><span class="dot"></span></div>
+</section>
+
+<section class="historia" id="historia">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="eyebrow">Nuestra historia</div>
+      <h2>De una cochera en 1990 a la esquina de Jardines del Country</h2>
+    </div>
+    <div class="historia-grid">
+      <div class="historia-img reveal">
+        <img src="assets/local-hero.jpeg" alt="Fachada del local de Don Cuco en Los Mochis, Sinaloa">
+        <div class="stamp">Auténtico<br>desde<br>1990</div>
+      </div>
+      <div class="historia-text reveal">
+        <p>Don Cuco es originario de <strong>Tepic</strong>. Desde muy niño migró a <strong>Los Mochis</strong> en busca de mejores oportunidades, y fue trabajando en un restaurante a pie de carretera donde aprendió el oficio que lo marcaría para siempre: asar pollo a la parrilla con las especias de la zona.</p>
+        <p>Ese aprendizaje, junto con las salsas que ya sabía preparar, lo inspiró a abrir su propio negocio. En <strong>1990</strong> comenzó en la cochera de su casa, y desde <strong>2012</strong> atiende en su ubicación actual, en Jardines del Country.</p>
+        <p>Lo que nos distingue no es solo el sazón: en el local encontrará una colección de <strong>artículos deportivos</strong> que ex deportistas de la zona y visitantes de paso le han ido regalando a Don Cuco a lo largo de los años — un pedacito de la historia de Los Mochis colgado en nuestras paredes.</p>
+        <div class="badges-row">
+          <div class="badge-chip">🌶️ Especias de la zona</div>
+          <div class="badge-chip">🥣 Salsas caseras</div>
+          <div class="badge-chip">🏆 Rincón deportivo de colección</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="menu" id="menu">
+  <div class="container">
+    <div class="menu-toolbar reveal">
+      <div class="section-head" style="margin-bottom:0;">
+        <div class="eyebrow">Menú</div>
+        <h2>Pollo asado y fast food para llevar</h2>
+        <p>Precios en pesos mexicanos. Todo se prepara al momento.</p>
+      </div>
+    </div>
+
+    <div class="menu-grid reveal-stagger">
+      <div class="menu-card">
+        <div class="top"><h3>Pollo entero</h3><span class="price">$200</span></div>
+        <p>Asado al carbón, sazonado con especias de la zona.</p>
+        <span class="tag">Más pedido</span>
+      </div>
+      <div class="menu-card">
+        <div class="top"><h3>Medio pollo</h3><span class="price">$120</span></div>
+        <p>Ideal para 2 personas, con el mismo sazón de siempre.</p>
+      </div>
+      <div class="menu-card">
+        <div class="top"><h3>Combo Don Cuco</h3><span class="price">$250</span></div>
+        <p>Pollo con guarniciones, listo para compartir en casa.</p>
+        <span class="tag">Familiar</span>
+      </div>
+      <div class="menu-card">
+        <div class="top"><h3>Papas</h3><span class="price">$50</span></div>
+        <p>Doradas y crujientes, la guarnición favorita.</p>
+      </div>
+      <div class="menu-card">
+        <div class="top"><h3>Tacos</h3><span class="price">$30</span></div>
+        <p>De pollo asado, con nuestras salsas caseras.</p>
+      </div>
+      <div class="menu-card">
+        <div class="top"><h3>Tortas</h3><span class="price">$50</span></div>
+        <p>Pan tostado relleno de pollo recién asado.</p>
+      </div>
+      <div class="menu-card">
+        <div class="top"><h3>Quesadillas</h3><span class="price">$40</span></div>
+        <p>Doradas, con queso derretido y pollo al gusto.</p>
+      </div>
+    </div>
+
+    <div class="pdf-cta reveal">
+      <div>
+        <h3>¿Prefiere el menú completo?</h3>
+        <p>Descargue el PDF con todos los productos y precios de Don Cuco.</p>
+      </div>
+      <a class="btn btn-dorado" href="assets/menu-don-cuco.pdf" download>
+        Descargar menú en PDF
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="historia" style="padding-top:0;">
+  <div class="container historia-grid" style="grid-template-columns:1.15fr .85fr;">
+    <div class="historia-text reveal">
+      <div class="eyebrow">Combo Don Cuco</div>
+      <h2 style="font-size:clamp(1.7rem,3vw,2.3rem); color:var(--cafe); margin-bottom:14px;">Para compartir en familia</h2>
+      <p>El paquete familiar completo trae pollo asado, tortillas recién hechas, arroz, frijoles, ensalada y nuestras salsas caseras — todo listo para servir en casa apenas llegue.</p>
+      <div class="badges-row">
+        <div class="badge-chip">👨‍👩‍👧‍👦 Ideal para compartir</div>
+        <div class="badge-chip">🌽 Con guarniciones incluidas</div>
+      </div>
+    </div>
+    <div class="historia-img reveal">
+      <img src="assets/paquete-familiar.jpeg" alt="Paquete familiar de Don Cuco servido con pollo asado, tortillas, arroz, frijoles y salsas">
+    </div>
+  </div>
+</section>
+
+<section class="reserva" id="reserva">
+  <div class="container reserva-grid">
+    <div class="reserva-info reveal">
+      <div class="eyebrow">Reserve su pedido</div>
+      <h3>Aparte su pollo y recójalo sin esperar</h3>
+      <p>Llene el formulario con lo que desea ordenar y la hora en que pasará por él. Confirmamos su pedido por WhatsApp o por correo electrónico.</p>
+      <ul class="steps">
+        <li><span class="step-num">1</span><span>Elija su producto, cantidad, fecha y hora de recolección.</span></li>
+        <li><span class="step-num">2</span><span>Enviamos su confirmación por WhatsApp o correo.</span></li>
+        <li><span class="step-num">3</span><span>Pase a recoger su pedido a la hora acordada — solo para llevar.</span></li>
+      </ul>
+    </div>
+
+    <form id="reservaForm" class="reveal">
+      <div class="field full">
+        <label for="nombre">Nombre completo</label>
+        <input type="text" id="nombre" name="nombre" placeholder="Su nombre" required>
+      </div>
+      <div class="field">
+        <label for="telefono">Teléfono / WhatsApp</label>
+        <input type="tel" id="telefono" name="telefono" placeholder="66X XXX XXXX" required>
+      </div>
+      <div class="field">
+        <label for="correo">Correo electrónico (opcional)</label>
+        <input type="email" id="correo" name="correo" placeholder="correo@ejemplo.com">
+      </div>
+      <div class="field full">
+        <label>Producto y cantidad</label>
+        <div class="qty-row">
+          <select id="producto" name="producto" required>
+            <option value="">Seleccione un producto…</option>
+            <option value="Pollo entero ($200)">Pollo entero — $200</option>
+            <option value="Medio pollo ($120)">Medio pollo — $120</option>
+            <option value="Combo Don Cuco ($250)">Combo Don Cuco — $250</option>
+            <option value="Papas ($50)">Papas — $50</option>
+            <option value="Tacos ($30)">Tacos — $30</option>
+            <option value="Tortas ($50)">Tortas — $50</option>
+            <option value="Quesadillas ($40)">Quesadillas — $40</option>
+          </select>
+          <input type="number" id="cantidad" name="cantidad" min="1" value="1" required>
+        </div>
+      </div>
+      <div class="field">
+        <label for="fecha">Fecha de recolección</label>
+        <input type="date" id="fecha" name="fecha" required>
+      </div>
+      <div class="field">
+        <label for="hora">Hora de recolección</label>
+        <input type="time" id="hora" name="hora" min="08:00" max="22:00" required>
+      </div>
+      <div class="field full">
+        <label for="notas">Notas adicionales (opcional)</label>
+        <textarea id="notas" name="notas" placeholder="Ej. sin salsa picante, cortar en piezas, etc."></textarea>
+      </div>
+      <div class="field full submit-row">
+        <button type="submit" class="btn btn-primary">Confirmar reserva</button>
+        <span class="form-note">Al confirmar, se abrirá WhatsApp con su pedido listo para enviar.</span>
+      </div>
+      <div id="formStatus" class="full"></div>
+    </form>
+  </div>
+</section>
+
+<section class="ubicacion" id="ubicacion">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="eyebrow">Encuéntrenos</div>
+      <h2>Ubicación y horario</h2>
+    </div>
+    <div class="ubicacion-grid">
+      <div class="info-card reveal">
+        <h3>📍 Datos del local</h3>
+        <div class="info-row">
+          <div class="ic">📌</div>
+          <div><strong>Dirección</strong><span>Blvd. Independencia S/N, Jardines del Country, 81248 Los Mochis, Sin.</span></div>
+        </div>
+        <div class="info-row">
+          <div class="ic">🥡</div>
+          <div><strong>Servicio</strong><span>Solo para llevar — no hay servicio de mesa en el local.</span></div>
+        </div>
+        <div class="info-row">
+          <div class="ic">💬</div>
+          <div><strong>Contacto</strong><span>WhatsApp: +52 333 984 4093 / +52 333 984 4089</span></div>
+        </div>
+        <h3 style="margin-top:26px;">🕗 Horario</h3>
+        <table class="hours-table">
+          <tr><td>Lunes a domingo</td><td>8:00 am – 10:00 pm</td></tr>
+        </table>
+      </div>
+      <div class="map-embed reveal">
+        <iframe src="https://www.google.com/maps?q=Blvd.+Independencia+S%2FN,+Jardines+del+Country,+81248+Los+Mochis,+Sin.&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Mapa de ubicación de Don Cuco"></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="contacto">
+  <div class="container">
+    <h2 class="reveal">Escríbanos directo por WhatsApp</h2>
+    <p class="reveal">Elija el número que prefiera para hacer su pedido o resolver cualquier duda.</p>
+    <div class="wa-buttons reveal-stagger">
+      <div class="wa-card">
+        <strong>Línea 1</strong>
+        <span>+52 333 984 4093</span>
+        <a class="btn btn-whatsapp" href="https://wa.me/523339844093?text=Hola%2C%20quiero%20hacer%20un%20pedido%20en%20Don%20Cuco" target="_blank" rel="noopener">Abrir chat</a>
+      </div>
+      <div class="wa-card">
+        <strong>Línea 2</strong>
+        <span>+52 333 984 4089</span>
+        <a class="btn btn-whatsapp" href="https://wa.me/523339844089?text=Hola%2C%20quiero%20hacer%20un%20pedido%20en%20Don%20Cuco" target="_blank" rel="noopener">Abrir chat</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="testimonios">
+  <div class="container">
+    <div class="testi-box reveal">
+      <div class="icon">💬</div>
+      <h3>Próximamente, la voz de nuestros clientes</h3>
+      <p>Estamos comenzando con nuestra página — muy pronto compartiremos aquí las reseñas de quienes ya han probado el sazón de Don Cuco.</p>
+    </div>
+  </div>
+</section>
+
+<footer id="contacto-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">
+          <svg class="logo-mark" width="36" height="36" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="50" r="48" fill="#c9974d"/>
+            <path d="M50 24c-4 0-7 3-7 7 0 2 1 4 2 5-6 2-10 8-10 15 0 2 0 4 1 6-3 1-5 4-5 7 0 5 4 9 9 9h20c5 0 9-4 9-9 0-3-2-6-5-7 1-2 1-4 1-6 0-7-4-13-10-15 1-1 2-3 2-5 0-4-3-7-7-7z" fill="#241d17"/>
+          </svg>
+          <span class="logo-text">Don Cuco</span>
+        </div>
+        <p style="max-width:260px; opacity:.75; font-size:.85rem;">Asador de pollos y fast food para llevar en Los Mochis, Sinaloa. Desde 1990.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Navegación</h4>
+        <a href="#historia">Historia</a>
+        <a href="#menu">Menú</a>
+        <a href="#reserva">Reservar</a>
+        <a href="#ubicacion">Ubicación</a>
+      </div>
+      <div class="footer-col">
+        <h4>Contacto</h4>
+        <a href="https://wa.me/523339844093" target="_blank" rel="noopener">WhatsApp +52 333 984 4093</a>
+        <a href="https://wa.me/523339844089" target="_blank" rel="noopener">WhatsApp +52 333 984 4089</a>
+        <p>Blvd. Independencia S/N, Jardines del Country, Los Mochis, Sin.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Horario</h4>
+        <p>Lunes a domingo</p>
+        <p>8:00 am – 10:00 pm</p>
+        <p>Solo para llevar</p>
+      </div>
+    </div>
+    <div class="footer-bottom">© <span id="year"></span> Don Cuco — Asador de Pollos. Los Mochis, Sinaloa.</div>
+  </div>
+</footer>
+
+<a class="wa-float" href="https://wa.me/523339844093?text=Hola%2C%20quiero%20hacer%20un%20pedido%20en%20Don%20Cuco" target="_blank" rel="noopener" aria-label="Pedir por WhatsApp">💬</a>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Header shadow on scroll
+  const header = document.getElementById('siteHeader');
+  window.addEventListener('scroll', () => {
+    header.classList.toggle('scrolled', window.scrollY > 20);
+  });
+
+  // Reveal on scroll
+  const revealEls = document.querySelectorAll('.reveal, .reveal-stagger');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        entry.target.classList.add('in');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el => io.observe(el));
+
+  // Mobile menu (simple toggle)
+  const burger = document.getElementById('burgerBtn');
+  const navList = document.querySelector('.nav ul');
+  burger.addEventListener('click', () => {
+    const open = navList.style.display === 'flex';
+    navList.style.display = open ? 'none' : 'flex';
+    navList.style.cssText += 'flex-direction:column; position:absolute; top:70px; right:24px; background:#faf3e6; padding:20px 26px; border-radius:14px; box-shadow:0 10px 24px rgba(0,0,0,.15);';
+  });
+
+  // Reservation form -> WhatsApp handoff + mailto fallback
+  const form = document.getElementById('reservaForm');
+  const statusBox = document.getElementById('formStatus');
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(form).entries());
+    const msg = `Hola, quiero reservar un pedido en Don Cuco:%0A` +
+      `Nombre: ${data.nombre}%0A` +
+      `Teléfono: ${data.telefono}%0A` +
+      `Producto: ${data.producto} x${data.cantidad}%0A` +
+      `Recolección: ${data.fecha} ${data.hora}%0A` +
+      `Notas: ${data.notas || 'Ninguna'}`;
+    const waUrl = `https://wa.me/523339844093?text=${msg}`;
+
+    statusBox.textContent = 'Abriendo WhatsApp para confirmar su pedido…';
+    statusBox.className = 'full show ok';
+
+    window.open(waUrl, '_blank');
+
+    if(data.correo){
+      const mailUrl = `mailto:?subject=${encodeURIComponent('Reserva de pedido - Don Cuco')}&body=${msg.replace(/%0A/g,'%0D%0A')}`;
+      // Left as a secondary/manual option — see note to owner about automated email sending.
+    }
+    form.reset();
+  });
+</script>
+
+</body>
+</html>
