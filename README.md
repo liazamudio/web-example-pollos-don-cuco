@@ -11,11 +11,15 @@ También permite preparar una reserva desde el navegador y transferirla a WhatsA
 
 <!-- COMPLETAR: explicar la motivación original del proyecto; no se puede inferir con certeza a partir del código. -->
 
+Este sitio se desarrollo como parte de las práctica de las practicas hechas en  el día 2 en la sesión de Agentes que construyen del Bootcamp Vibe Agents.
+
 ## Demo
 
 <!-- COMPLETAR: agregar la URL pública de la demo si existe; no hay una URL de producción ni configuración de despliegue en el repositorio. -->
 
 La vista previa disponible en el repositorio es [una fotografía del local](assets/local-hero.jpeg).
+
+Link de muesta del sitio: https://don-cuco-talent-team1.vercel.app/
 
 ## Stack técnico
 
@@ -60,4 +64,4 @@ Alex Zamudio
 
 ## Licencia
 
-<!-- COMPLETAR: elegir y declarar una licencia; no existe un archivo LICENSE ni una licencia indicada en el repositorio. -->
+Todos los derechos reservados. Este proyecto es un desarrollo propio que forma parte del portafolio de servicios de Alex Zamudio; el código se publica únicamente con fines de exhibición y revisión técnica. Ver [LICENSE](LICENSE) para más detalles.
