@@ -1,13 +1,85 @@
+<!--
+  =========================================================================
+  DON CUCO — ASADOR DE POLLOS · LANDING PAGE
+  =========================================================================
+  Sitio de una sola página (single-file site): HTML + CSS + JS vanilla,
+  todo vive en este único archivo `index.html`. No hay build step, no hay
+  framework, no hay dependencias que instalar — se sirve tal cual.
+
+  ARQUITECTURA DEL ARCHIVO (de arriba hacia abajo):
+    1. <head>            → metadatos, SEO y fuentes de Google Fonts.
+    2. <style>            → todo el CSS del sitio (ver "MAPA DEL CSS" ahí).
+    3. <body>              → el markup, sección por sección (ver debajo).
+    4. <script> (al final) → toda la interactividad (ver "MAPA DEL JS" ahí).
+
+  MAPA DE SECCIONES DEL <body> (en orden de aparición, con su ancla de
+  navegación entre paréntesis — coinciden con los <a href="#..."> del
+  menú superior y del footer):
+    - <header>                    Barra de navegación fija + menú móvil.
+    - <section class="hero">      (#inicio)    Portada / primer impacto.
+    - <section class="historia">  (#historia)  Historia del negocio.
+    - <section class="menu">      (#menu)      Catálogo de productos.
+    - <section class="historia historia--combo">
+                                   Bloque "Combo Don Cuco" — reutiliza los
+                                   estilos de la sección Historia con
+                                   modificadores (ver más abajo por qué).
+    - <section class="reserva">   (#reserva)   Formulario de reservación.
+    - <section class="ubicacion">(#ubicacion)  Dirección, horario y mapa.
+    - <section class="contacto">  Enlaces directos a WhatsApp.
+    - <section class="testimonios"> Placeholder para futuras reseñas.
+    - <footer>                    Enlaces, datos de contacto y copyright.
+    - Botón flotante de WhatsApp (fuera de cualquier <section>).
+
+  CONVENCIÓN DE NOMBRES CSS:
+    Se usa un enfoque "orientado a componente", no BEM estricto:
+      .nombre-componente            → bloque/contenedor principal.
+      .nombre-componente-elemento   → parte interna de ese componente.
+      .nombre-componente--variante  → modificador (doble guion), p. ej.
+                                       `.historia--combo` y
+                                       `.historia-grid--reverse` reutilizan
+                                       `.historia` / `.historia-grid` pero
+                                       invierten el orden de columnas y
+                                       quitan el padding superior para la
+                                       segunda vez que se usa ese layout.
+
+  CÓMO EDITAR CONTENIDO FRECUENTE (guía rápida para juniors):
+    - Agregar/editar un platillo del menú → sección "Menú", cada
+      `.menu-card` es independiente y copiable. Recuerda: el precio que
+      pongas aquí NO se sincroniza automáticamente con el PDF descargable
+      (`assets/menu-don-cuco.pdf`); si cambia un precio, actualiza ambos.
+    - Cambiar número de WhatsApp → aparece en VARIOS lugares (hero,
+      sección "Contacto rápido", footer, botón flotante y el <script> del
+      formulario). Búscalo por el prefijo `wa.me/523339844093` /
+      `...4089` y reemplaza en todas las apariciones.
+    - Cambiar dirección/horario → aparecen en la sección "Ubicación"
+      (tarjeta de info + tabla de horario) y se repiten en el footer;
+      el mapa embebido (iframe de Google Maps) usa la dirección como
+      texto en el parámetro `q=` de la URL, así que si cambia la
+      dirección hay que regenerar esa URL en Google Maps.
+    - Los enlaces de navegación (header y footer) usan anclas (`#menu`,
+      `#reserva`, etc.) que apuntan al `id` de cada `<section>`; si
+      renombras un `id`, actualiza también esos enlaces.
+
+  DEPENDENCIAS EXTERNAS:
+    - Google Fonts (Fraunces + Nunito Sans), cargadas vía <link> abajo.
+    - Assets locales en `assets/` (fotos y el PDF del menú) — no se listan
+      aquí para no duplicar el README, ver `README.md` en la raíz.
+    - Sin librerías de JS ni CSS de terceros: todo el comportamiento
+      (scroll reveal, menú móvil, envío del formulario) es JS nativo.
+  =========================================================================
+-->
 <!doctype html>
 <html lang="es-MX">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Don Cuco — Asador de Pollos | Los Mochis, Sinaloa</title>
+    <!-- SEO: título y descripción que se muestran en resultados de buscadores. -->
     <meta
       name="description"
       content="Pollo asado al carbón y fast food para llevar en Los Mochis, Sinaloa. Desde 1990. Pide por WhatsApp o reserva tu pedido en línea."
     />
+    <!-- Tipografías: Fraunces (serif, títulos) y Nunito Sans (texto general). -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -15,26 +87,52 @@
       rel="stylesheet"
     />
     <style>
+      /*
+        =====================================================================
+        MAPA DEL CSS (orden de este bloque <style>, de arriba hacia abajo):
+          1. Design tokens (:root) + reset global.
+          2. Utilidades base: .container, .btn y sus variantes.
+          3. Header / navegación.
+          4. Hero (portada) + sus animaciones @keyframes.
+          5. Sistema "reveal on scroll" (.reveal / .reveal-stagger) —
+             las clases se activan vía JS con IntersectionObserver.
+          6. Un bloque por sección del sitio: Historia, Menu, Reserva,
+             Ubicacion, Contacto rápido, Testimonios, Footer.
+          7. Botón flotante de WhatsApp (.wa-float).
+          8. Media query única (@media max-width: 880px) al final, con
+             todos los ajustes responsivos agrupados en un solo lugar
+             en vez de dispersos por cada bloque.
+
+        No hay preprocesador (Sass/Less): todo es CSS plano con
+        Custom Properties (variables --nombre) para la paleta de color.
+        =====================================================================
+      */
+
+      /* Design tokens: paleta de color única del sitio. Cambiar un color
+         aquí lo actualiza en todos los lugares donde se usa var(--nombre). */
       :root {
-        --terracota: #c1502e;
-        --terracota-dark: #9c3d21;
-        --oliva: #6b7b4f;
-        --cafe: #4a3327;
-        --crema: #faf3e6;
-        --crema-2: #f2e6d0;
-        --dorado: #c9974d;
-        --carbon: #241d17;
-        --texto: #2b241b;
-        --blanco: #fffdf8;
-        --sombra: 0 10px 30px rgba(36, 29, 23, 0.15);
+        --terracota: #c1502e; /* Color de marca principal: botones, acentos, líneas activas. */
+        --terracota-dark: #9c3d21; /* Hover/estado activo del terracota; también fondo de gradientes oscuros. */
+        --oliva: #6b7b4f; /* Color secundario: etiquetas ("Más pedido"), subtítulo del logo. */
+        --cafe: #4a3327; /* Color de texto para títulos (h2/h3) sobre fondos claros. */
+        --crema: #faf3e6; /* Fondo base del sitio (body) y color de texto sobre fondos oscuros. */
+        --crema-2: #f2e6d0; /* Fondo alterno para secciones "pares" (menu, ubicación) y texto secundario claro. */
+        --dorado: #c9974d; /* Acento decorativo: eyebrow, badges, hover en footer. */
+        --carbon: #241d17; /* Color casi-negro: fondos oscuros (hero, contacto, footer). */
+        --texto: #2b241b; /* Color de texto por defecto del body. */
+        --blanco: #fffdf8; /* Blanco cálido para tarjetas y texto sobre fondos oscuros. */
+        --sombra: 0 10px 30px rgba(36, 29, 23, 0.15); /* Sombra reutilizable para tarjetas/imágenes con relieve. */
       }
+      /* Reset global mínimo: quita márgenes/padding por defecto del navegador
+         y usa el modelo de caja "border-box" en todos los elementos, para que
+         paddings/bordes no alteren el ancho definido. */
       * {
         box-sizing: border-box;
         margin: 0;
         padding: 0;
       }
       html {
-        scroll-behavior: smooth;
+        scroll-behavior: smooth; /* Anclas (#menu, #reserva, etc.) hacen scroll suave en vez de salto brusco. */
       }
       body {
         font-family: "Nunito Sans", sans-serif;
@@ -57,11 +155,15 @@
         max-width: 100%;
         display: block;
       }
+      /* Ancho máximo centrado que envuelve el contenido de cada sección. */
       .container {
         max-width: 1140px;
         margin: 0 auto;
         padding: 0 24px;
       }
+      /* Botón base. Las variantes (.btn-primary, .btn-whatsapp,
+         .btn-outline, .btn-dorado) solo cambian color de fondo/texto;
+         siempre se combinan con la clase .btn, ej: class="btn btn-primary". */
       .btn {
         display: inline-flex;
         align-items: center;
@@ -108,7 +210,11 @@
         color: var(--carbon);
       }
 
-      /* Header */
+      /* Header
+         La barra queda fija (position: fixed) y semitransparente con
+         desenfoque de fondo (backdrop-filter). La clase `.scrolled` la
+         añade el JS al final del archivo cuando window.scrollY > 20, para
+         mostrar una sombra sutil una vez que el usuario empieza a bajar. */
       header {
         position: fixed;
         top: 0;
@@ -190,6 +296,10 @@
         padding: 10px 18px;
         font-size: 0.8rem;
       }
+      /* Oculto en escritorio; se muestra vía la media query al final
+         (max-width: 880px). Al hacer clic, el <script> le agrega estilos
+         inline al <ul> del menú para desplegarlo — ver "Mobile menu"
+         en el bloque <script>. */
       .burger {
         display: none;
         flex-direction: column;
@@ -205,7 +315,14 @@
         border-radius: 2px;
       }
 
-      /* Hero */
+      /* Hero
+         Primera sección visible al cargar la página. Los elementos internos
+         (.eyebrow, h1, p.lead, .hero-actions, .hero-meta) entran con la
+         animación @keyframes fadeUp, cada uno con un `animation-delay`
+         distinto para crear un efecto de aparición escalonada al cargar
+         (esto es DISTINTO del sistema .reveal/.reveal-stagger de más abajo,
+         que depende de scroll — el hero se anima siempre al cargar, sin
+         necesidad de hacer scroll). */
       .hero {
         position: relative;
         min-height: 100vh;
@@ -422,7 +539,20 @@
         }
       }
 
-      /* Reveal on scroll */
+      /* Reveal on scroll
+         Sistema de animación de entrada al hacer scroll. Funciona en pareja
+         con el IntersectionObserver del <script> (buscar "Reveal on
+         scroll" ahí): el JS le agrega la clase `.in` a cualquier elemento
+         con `.reveal` o `.reveal-stagger` cuando entra en el viewport, y
+         esta hoja de estilos define cómo se ve el estado "antes" (oculto,
+         desplazado) y "después" (`.in`: visible, en su posición).
+
+         Cómo usarlo en HTML nuevo:
+           - `class="reveal"` en un solo elemento → aparece completo de una vez.
+           - `class="reveal-stagger"` en un CONTENEDOR → cada hijo directo
+             (>*) aparece uno tras otro, con el delay definido en los
+             selectores `:nth-child(n)` de abajo (hasta 7 hijos; si agregas
+             un octavo hijo no tendrá delay propio y aparecerá junto al 7°). */
       .reveal {
         opacity: 0;
         transform: translateY(36px);
@@ -493,13 +623,21 @@
         line-height: 1.7;
       }
 
-      /* Historia */
+      /* Historia
+         Estas reglas (.historia, .historia-grid, .historia-img,
+         .historia-text) se comparten entre DOS secciones del HTML:
+         la sección "Nuestra historia" (id="historia") y el bloque
+         "Combo Don Cuco" más abajo en el body, que reutiliza las mismas
+         clases con los modificadores `.historia--combo` y
+         `.historia-grid--reverse` (definidos más abajo) para invertir el
+         layout y quitar el padding superior. Si edita este bloque base,
+         revise el impacto en ambas secciones del HTML. */
       .historia {
         background: var(--blanco);
       }
       .historia-grid {
         display: grid;
-        grid-template-columns: 0.85fr 1.15fr;
+        grid-template-columns: 0.85fr 1.15fr; /* Imagen a la izquierda, texto a la derecha (orden por defecto). */
         gap: 60px;
         align-items: center;
       }
@@ -556,9 +694,16 @@
         color: var(--cafe);
         margin-bottom: 14px;
       }
+      /* Modificador: usado en la 2ª sección "historia" (bloque Combo Don
+         Cuco) para que no duplique el padding superior de la sección de
+         menú justo arriba (quedan pegadas visualmente a propósito). */
       .historia--combo {
         padding-top: 0;
       }
+      /* Modificador: invierte el orden visual de columnas — en el bloque
+         Combo Don Cuco el texto va primero y la imagen queda a la derecha
+         (0.85fr 1.15fr → 1.15fr 0.85fr), a diferencia del layout por
+         defecto de .historia-grid. */
       .historia-grid--reverse {
         grid-template-columns: 1.15fr 0.85fr;
       }
@@ -589,7 +734,13 @@
         color: var(--carbon);
       }
 
-      /* Menu */
+      /* Menu
+         El catálogo de productos (.menu-grid > .menu-card) usa CSS Grid
+         con `auto-fit` + `minmax(240px, 1fr)`: las tarjetas se acomodan
+         solas según el ancho disponible, sin necesidad de media queries
+         extra para agregar/quitar columnas. Para añadir un producto,
+         basta con copiar un bloque `.menu-card` en el HTML (ver sección
+         "Menú" del body); no hace falta tocar este CSS. */
       .menu {
         background: var(--crema-2);
       }
@@ -698,7 +849,13 @@
         font-size: 0.92rem;
       }
 
-      /* Reserva */
+      /* Reserva
+         Estilos del formulario de reservación (#reservaForm). El grid de
+         2 columnas (`form { grid-template-columns: 1fr 1fr }`) hace que
+         cada `.field` ocupe una columna; agregar `class="field full"`
+         hace que el campo ocupe el ancho completo (ver `form .full`
+         abajo). El comportamiento de envío (qué hace el formulario al
+         hacer submit) vive en el <script>, sección "Reservation form". */
       .reserva {
         background: var(--blanco);
       }
@@ -814,6 +971,12 @@
         color: #7a6b58;
         line-height: 1.5;
       }
+      /* Caja de mensaje de estado del formulario, oculta por defecto.
+         El JS le agrega las clases `show` y `ok` al enviar exitosamente
+         (ver `statusBox.className = "full show ok"` en el <script>).
+         Nota: solo existe el estado "ok" (éxito); no hay un estado de
+         error visual porque el formulario usa validación nativa del
+         navegador (atributos `required`) y no valida nada del lado JS. */
       #formStatus {
         font-size: 0.85rem;
         font-weight: 700;
@@ -829,7 +992,12 @@
         color: var(--oliva);
       }
 
-      /* Ubicacion */
+      /* Ubicacion
+         Tarjeta de datos (dirección/horario) + mapa embebido de Google
+         Maps (iframe en `.map-embed`). El mapa usa una URL de búsqueda de
+         Google Maps con `output=embed`; si cambia la dirección, genere
+         una nueva URL desde Google Maps ("Compartir" → "Insertar mapa")
+         y reemplace el `src` del iframe en el HTML. */
       .ubicacion {
         background: var(--crema-2);
       }
@@ -991,6 +1159,12 @@
         margin-bottom: 10px;
       }
 
+      /* Footer
+         Nota: los enlaces de navegación y los datos de contacto/horario
+         del footer están DUPLICADOS manualmente respecto al header y a
+         la sección "Ubicación" (no hay una sola fuente de verdad ni
+         generación dinámica). Si actualiza un dato en una sección,
+         recuerde replicarlo aquí también. */
       footer {
         background: var(--carbon);
         color: var(--crema-2);
@@ -1044,6 +1218,10 @@
         text-align: center;
       }
 
+      /* Botón flotante de WhatsApp, siempre visible en la esquina inferior
+         derecha (position: fixed), con una animación de "pulso" infinita
+         para llamar la atención. Vive fuera de cualquier <section>, justo
+         antes del <script> al final del <body>. */
       .wa-float {
         position: fixed;
         bottom: 26px;
@@ -1073,6 +1251,11 @@
         }
       }
 
+      /* Único breakpoint responsivo del sitio (enfoque "desktop-first":
+         el layout de escritorio es la base y aquí se ajusta para pantallas
+         angostas). Si necesita otro punto de quiebre, agregue una nueva
+         media query siguiendo este mismo patrón en vez de dispersar reglas
+         responsivas por todo el archivo. */
       @media (max-width: 880px) {
         .nav ul {
           display: none;
@@ -1106,6 +1289,14 @@
     </style>
   </head>
   <body>
+    <!--
+      HEADER: barra de navegación fija (ver CSS `header`). Contiene:
+        - Logo (SVG inline + texto) enlazado a #inicio.
+        - Menú de anclas de escritorio (oculto en móvil vía media query).
+        - CTA "Reservar pedido" (oculto en móvil).
+        - Botón hamburguesa (#burgerBtn), visible solo en móvil, que el
+          <script> usa para desplegar el <ul> del menú.
+    -->
     <header id="siteHeader">
       <div class="nav">
         <a href="#inicio" class="logo">
@@ -1141,6 +1332,15 @@
       </div>
     </header>
 
+    <!--
+      SECCIÓN HERO (id="inicio"): primera vista de la página. Estructura:
+        - Columna de texto: eyebrow + h1 + párrafo + botones CTA + métricas
+          (.hero-meta: año de fundación, % para llevar, horario).
+        - Columna de foto (.hero-photo): imagen principal + "sello"
+          decorativo (.hero-badge). En móvil pasa a mostrarse ARRIBA del
+          texto (`.hero-photo { order: -1 }` en la media query).
+      Editar el texto principal (h1, párrafo `lead`) aquí mismo.
+    -->
     <section class="hero" id="inicio">
       <div class="container hero-grid">
         <div>
@@ -1185,6 +1385,13 @@
       </div>
     </section>
 
+    <!--
+      SECCIÓN HISTORIA (id="historia"): narrativa del negocio. Imagen a la
+      izquierda con un "sello" decorativo (.stamp) + texto a la derecha
+      con párrafos y chips de datos destacados (.badges-row). Todo el
+      contenido es texto editorial; edite los <p> directamente para
+      actualizar la historia del negocio.
+    -->
     <section class="historia" id="historia">
       <div class="container">
         <div class="section-head reveal">
@@ -1231,6 +1438,24 @@
       </div>
     </section>
 
+    <!--
+      SECCIÓN MENÚ (id="menu"): catálogo de productos.
+
+      PARA AGREGAR UN PRODUCTO NUEVO:
+        1. Copie un bloque `<div class="menu-card">...</div>` completo
+           dentro de `.menu-grid` (más abajo) y edite nombre/precio/
+           descripción. El grid se acomoda solo, no requiere tocar CSS.
+        2. Opcional: agregue `<span class="tag">Texto</span>` para
+           destacarlo (ej. "Más pedido", "Familiar").
+        3. IMPORTANTE: agregue también una `<option>` correspondiente en
+           el <select id="producto"> del formulario de reservación (más
+           abajo, sección "Reserva") — el menú visual y las opciones del
+           formulario NO están conectados automáticamente, se mantienen
+           en sincronía a mano.
+        4. Si cambia un precio aquí, actualice también
+           `assets/menu-don-cuco.pdf` (el PDF descargable no se genera
+           desde este HTML).
+    -->
     <section class="menu" id="menu">
       <div class="container">
         <div class="menu-toolbar reveal">
@@ -1309,6 +1534,15 @@
       </div>
     </section>
 
+    <!--
+      SECCIÓN "COMBO DON CUCO" (sin id propio, no aparece en la navegación):
+      reutiliza el layout de la sección Historia (mismas clases
+      `.historia` / `.historia-grid`) con los modificadores
+      `historia--combo` (sin padding superior) y `historia-grid--reverse`
+      (imagen a la derecha en vez de a la izquierda). Es un bloque
+      promocional independiente, no forma parte de la narrativa de
+      "Nuestra historia" de arriba.
+    -->
     <section class="historia historia--combo">
       <div class="container historia-grid historia-grid--reverse">
         <div class="historia-text reveal">
@@ -1333,6 +1567,36 @@
       </div>
     </section>
 
+    <!--
+      SECCIÓN RESERVA (id="reserva"): formulario de reservación.
+
+      Columna izquierda: texto explicativo + lista de pasos (.steps),
+      solo contenido estático.
+
+      Columna derecha: <form id="reservaForm">. NO tiene backend: al
+      enviarse, el <script> (sección "Reservation form" al final del
+      archivo) arma un mensaje de texto con los datos y abre WhatsApp
+      Web/App con ese mensaje precargado — no hay persistencia en ningún
+      servidor ni base de datos, todo ocurre en el navegador del cliente.
+
+      Campos del formulario (todos con `name` = clave usada por el JS
+      al leer `FormData`):
+        - nombre    (texto, requerido)
+        - telefono  (tel, requerido)
+        - correo    (email, opcional — actualmente NO se usa para nada
+                     funcional, ver nota en el <script>)
+        - producto  (select, requerido) — DEBE mantenerse sincronizado
+                     a mano con las tarjetas de `.menu-card` de la
+                     sección Menú (ver nota ahí).
+        - cantidad  (number, mínimo 1, requerido)
+        - fecha     (date, requerido)
+        - hora      (time, entre 08:00 y 22:00, requerido)
+        - notas     (textarea, opcional)
+
+      La validación es 100% nativa del navegador vía atributos HTML
+      (`required`, `type="email"`, `min`/`max`); no hay JS de validación
+      adicional.
+    -->
     <section class="reserva" id="reserva">
       <div class="container reserva-grid">
         <div class="reserva-info reveal">
@@ -1463,6 +1727,13 @@
       </div>
     </section>
 
+    <!--
+      SECCIÓN UBICACIÓN (id="ubicacion"): tarjeta de datos (dirección,
+      modalidad de servicio, contacto, tabla de horario) + mapa embebido
+      de Google Maps vía <iframe>. Para actualizar la dirección, cambie
+      el texto de la tarjeta Y regenere la URL del iframe (ver comentario
+      en el CSS de `.ubicacion` más arriba).
+    -->
     <section class="ubicacion" id="ubicacion">
       <div class="container">
         <div class="section-head reveal">
@@ -1517,6 +1788,13 @@
       </div>
     </section>
 
+    <!--
+      SECCIÓN CONTACTO RÁPIDO: dos tarjetas con enlaces directos a
+      wa.me para cada línea de WhatsApp del negocio. Si el negocio agrega
+      o quita una línea telefónica, agregue/quite un bloque `.wa-card`
+      aquí (y recuerde que el mismo número también aparece en el hero,
+      el footer y el botón flotante — ver nota al inicio del archivo).
+    -->
     <section class="contacto">
       <div class="container">
         <h2 class="reveal">Escríbanos directo por WhatsApp</h2>
@@ -1551,6 +1829,13 @@
       </div>
     </section>
 
+    <!--
+      SECCIÓN TESTIMONIOS: actualmente es un placeholder ("Próximamente...")
+      sin reseñas reales. Cuando haya testimonios, reemplace el contenido
+      de `.testi-box` por tarjetas individuales (se puede reutilizar el
+      patrón de `.menu-grid` / `.wa-buttons` como referencia de un grid
+      de tarjetas repetibles).
+    -->
     <section class="testimonios">
       <div class="container">
         <div class="testi-box reveal">
@@ -1564,6 +1849,14 @@
       </div>
     </section>
 
+    <!--
+      FOOTER: logo + tagline, columna de navegación (duplica los enlaces
+      del header), columna de contacto (duplica dirección/WhatsApp de la
+      sección Ubicación) y columna de horario. El año del copyright
+      (`#year`) se rellena dinámicamente por JS al cargar la página
+      (`new Date().getFullYear()`), NO está hardcodeado — no requiere
+      mantenimiento anual manual.
+    -->
     <footer id="contacto-footer">
       <div class="container">
         <div class="footer-grid">
@@ -1623,6 +1916,7 @@
       </div>
     </footer>
 
+    <!-- Botón flotante de WhatsApp, visible en toda la página (fixed). -->
     <a
       class="wa-float"
       href="https://wa.me/523339844093?text=Hola%2C%20quiero%20hacer%20un%20pedido%20en%20Don%20Cuco"
@@ -1633,15 +1927,46 @@
     >
 
     <script>
+      /**
+       * =====================================================================
+       * MAPA DEL JS (todo el comportamiento del sitio vive en este bloque,
+       * sin módulos ni build step — se ejecuta tal cual en el navegador):
+       *
+       *   1. Año dinámico del copyright en el footer.
+       *   2. Sombra del header al hacer scroll.
+       *   3. Sistema "reveal on scroll" (IntersectionObserver) — activa las
+       *      clases `.reveal` / `.reveal-stagger` definidas en el CSS.
+       *   4. Menú móvil (toggle del burger).
+       *   5. Envío del formulario de reservación → WhatsApp.
+       *
+       * No se usa ningún framework ni librería externa: todo es DOM API
+       * nativo (querySelector, addEventListener, FormData, etc.).
+       * No hay TypeScript ni build; los tipos se documentan aquí con
+       * comentarios JSDoc como referencia para el editor/IDE.
+       * =====================================================================
+       */
+
+      // 1) Año dinámico en el footer: evita tener que actualizar el
+      //    copyright a mano cada enero. `#year` es un <span> vacío en el HTML.
       document.getElementById("year").textContent = new Date().getFullYear();
 
-      // Header shadow on scroll
+      // 2) Header shadow on scroll
+      //    Agrega la clase `.scrolled` al header (ver CSS `header.scrolled`)
+      //    apenas el usuario baja más de 20px, para dar sensación de
+      //    profundidad sobre el contenido que pasa por debajo.
       const header = document.getElementById("siteHeader");
       window.addEventListener("scroll", () => {
         header.classList.toggle("scrolled", window.scrollY > 20);
       });
 
-      // Reveal on scroll
+      // 3) Reveal on scroll
+      //    Observa todos los elementos marcados con `.reveal` o
+      //    `.reveal-stagger` en el HTML y, la primera vez que entran en el
+      //    viewport (15% visible, ver `threshold`), les agrega la clase
+      //    `.in` que dispara la transición CSS de aparición. Cada elemento
+      //    se deja de observar (`unobserve`) tras revelarse una vez: la
+      //    animación es de una sola vez por carga de página, no se repite
+      //    si el usuario vuelve a hacer scroll hacia arriba y abajo.
       const revealEls = document.querySelectorAll(".reveal, .reveal-stagger");
       const io = new IntersectionObserver(
         (entries) => {
@@ -1656,7 +1981,14 @@
       );
       revealEls.forEach((el) => io.observe(el));
 
-      // Mobile menu (simple toggle)
+      // 4) Mobile menu (simple toggle)
+      //    Implementación deliberadamente simple: en vez de alternar una
+      //    clase CSS (ej. `.nav-open`), el click le escribe estilos INLINE
+      //    directamente al <ul> del menú (posición absoluta, fondo, etc.)
+      //    para simular un menú desplegable sin agregar más CSS.
+      //    Nota para quien lo edite: si el sitio crece, esto es buen
+      //    candidato a refactor hacia una clase CSS dedicada en vez de
+      //    `style.cssText`, que es más frágil y difícil de mantener.
       const burger = document.getElementById("burgerBtn");
       const navList = document.querySelector(".nav ul");
       burger.addEventListener("click", () => {
@@ -1666,9 +1998,53 @@
           "flex-direction:column; position:absolute; top:70px; right:24px; background:#faf3e6; padding:20px 26px; border-radius:14px; box-shadow:0 10px 24px rgba(0,0,0,.15);";
       });
 
-      // Reservation form -> WhatsApp handoff + mailto fallback
+      // 5) Reservation form -> WhatsApp handoff
+      //    El formulario NO envía datos a ningún servidor: al hacer submit
+      //    se arma un mensaje de texto con los datos capturados y se abre
+      //    una URL de wa.me con ese mensaje precargado, dejando que el
+      //    propio usuario confirme y envíe el mensaje por WhatsApp.
+      //
+      //    @typedef {Object} ReservationFormData
+      //    @property {string} nombre    - Nombre completo del cliente.
+      //    @property {string} telefono  - Teléfono / WhatsApp del cliente.
+      //    @property {string} [correo]  - Correo opcional (ver nota abajo).
+      //    @property {string} producto  - Texto de la opción elegida en
+      //                                    el <select>, ej. "Pollo entero ($200)".
+      //    @property {string} cantidad  - Cantidad como string (proviene
+      //                                    de FormData; convertir con
+      //                                    Number(data.cantidad) si se
+      //                                    necesita aritmética).
+      //    @property {string} fecha     - Fecha de recolección (YYYY-MM-DD).
+      //    @property {string} hora      - Hora de recolección (HH:MM).
+      //    @property {string} [notas]   - Notas adicionales, opcional.
       const form = document.getElementById("reservaForm");
       const statusBox = document.getElementById("formStatus");
+
+      /**
+       * Maneja el submit del formulario de reservación.
+       * 1. Evita el envío/recarga por defecto del navegador.
+       * 2. Lee los campos del formulario con FormData.
+       * 3. Arma un mensaje de WhatsApp con saltos de línea codificados
+       *    como `%0A` (equivalente URL-encoded de un salto de línea).
+       * 4. Muestra una confirmación visual y abre WhatsApp en una pestaña
+       *    nueva con el mensaje precargado.
+       * 5. Limpia el formulario.
+       *
+       * @param {SubmitEvent} e Evento nativo de submit del <form>.
+       * @returns {void}
+       *
+       * LIMITACIONES CONOCIDAS (útiles para quien continúe el desarrollo):
+       *   - El mensaje se arma concatenando texto plano sin
+       *     `encodeURIComponent` por campo; caracteres especiales de URL
+       *     (`&`, `#`, `%`, etc.) escritos por el cliente en "Nombre" o
+       *     "Notas" podrían romper el formato del mensaje o de la URL.
+       *   - El campo "correo" se captura pero no se usa para nada
+       *     funcional: se arma una `mailUrl` de tipo `mailto:` pero nunca
+       *     se abre ni se muestra al usuario (variable declarada y sin
+       *     usar). Si se requiere confirmación por correo, aquí es donde
+       *     habría que completarlo (o eliminar el campo si no se va a
+       *     implementar).
+       */
       form.addEventListener("submit", function (e) {
         e.preventDefault();
         const data = Object.fromEntries(new FormData(form).entries());
@@ -1687,8 +2063,11 @@
         window.open(waUrl, "_blank");
 
         if (data.correo) {
+          // TODO: `mailUrl` se construye pero no se usa (no se abre ni se
+          // ofrece al usuario). Es un fallback pendiente de decisión de
+          // producto: ¿enviar automáticamente, mostrar un enlace "mailto"
+          // al usuario, o eliminar este bloque? Ver nota JSDoc arriba.
           const mailUrl = `mailto:?subject=${encodeURIComponent("Reserva de pedido - Don Cuco")}&body=${msg.replace(/%0A/g, "%0D%0A")}`;
-          // Left as a secondary/manual option — see note to owner about automated email sending.
         }
         form.reset();
       });

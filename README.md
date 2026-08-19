@@ -62,6 +62,10 @@ Alex Zamudio
 
 <!-- COMPLETAR: indicar el rol específico del autor en el proyecto; el nombre se tomó del autor del commit inicial, pero el rol no se puede inferir. -->
 
+## Contribuir
+
+¿Quieres proponer un cambio o colaborar en el proyecto? Consulta [CONTRIBUTING.md](CONTRIBUTING.md) para la guía de estilo, cómo correr el sitio localmente y el checklist previo a enviar un cambio.
+
 ## Licencia
 
 Todos los derechos reservados. Este proyecto es un desarrollo propio que forma parte del portafolio de servicios de Alex Zamudio; el código se publica únicamente con fines de exhibición y revisión técnica. Ver [LICENSE](LICENSE) para más detalles.
